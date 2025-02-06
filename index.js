@@ -1,4 +1,4 @@
-const child_process = require('child_process');
+const childProcess = require('child_process');
 const core = require('@actions/core');
 const fs = require('fs');
 const os = require('os');
@@ -44,7 +44,7 @@ try {
     const knownHostsFile = path.join(homeDotSshDir, 'known_hosts');
     fs.writeFileSync(knownHostsFile, GITHUB_COM + os.EOL);
     console.log(`${knownHostsFile}: created`);
-    let sshConfigList = [];
+    const sshConfigList = [];
     for (let k = 0; k < n; ++k) {
         const keyLines = allKeys[k].trim()
              .split(/\r?\n/);
@@ -72,7 +72,7 @@ try {
             return;
         }
 
-        child_process.execSync(
+        childProcess.execSync(
             `ssh-keygen -y -f ${keyFile} > ${publicKeyFile}`);
         console.log(`${publicKeyFile}: created`);
         const data = fs.readFileSync(publicKeyFile, { encoding: 'utf8' });
@@ -94,7 +94,7 @@ try {
         const url = comment.slice(0, -COMMENT_POSTFIX.length);
         const pathOfUrl = url.slice(COMMENT_PREFIX.length);
         const newUrl = `git@${fakeHost}:${pathOfUrl}`;
-        child_process.execSync(
+        childProcess.execSync(
             `git config --global url.${newUrl}.insteadOf ${url}`);
         sshConfigList.push(`Host ${fakeHost}`,
             '  HostName github.com',
