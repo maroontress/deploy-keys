@@ -1,7 +1,7 @@
 {
   "name": "deploy-keys",
   "repository": "git@github.com:maroontress/deploy-keys.git",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Configure the Git and SSH with the specified GitHub Deploy Keys to access other private repositories",
   "main": "index.js",
   "scripts": {
