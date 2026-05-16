@@ -1,8 +1,8 @@
-const childProcess = require('child_process');
-const core = require('@actions/core');
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
+import { execSync } from 'child_process';
+import * as core from '@actions/core';
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
 
 try {
     const COMMENT_PREFIX = 'git@github.com:';
@@ -26,19 +26,16 @@ try {
     const homeDotSshDir = path.join(homeDir, '.ssh');
     const keyList = core.getInput('keys');
     if (keyList === null) {
-        core.setFailed(EMPTY_KEYS);
-        return;
+        throw new Error(EMPTY_KEYS);
     }
     const trimmedKeyList = keyList.trim();
     if (trimmedKeyList.length === 0) {
-        core.setFailed(EMPTY_KEYS);
-        return;
+        throw new Error(EMPTY_KEYS);
     }
     const allKeys = trimmedKeyList.split(/(?=-----BEGIN)/);
     const n = allKeys.length;
     if (n === 0) {
-        core.setFailed(EMPTY_KEYS);
-        return;
+        throw new Error(EMPTY_KEYS);
     }
     fs.mkdirSync(homeDotSshDir, { recursive: true });
     const knownHostsFile = path.join(homeDotSshDir, 'known_hosts');
@@ -57,8 +54,7 @@ try {
         console.log(`${keyFile}: created`);
 
         if (keyLines.length < 2) {
-            core.setFailed(`${keyFile}: too short lines`);
-            return;
+            throw new Error(`${keyFile}: too short lines`);
         }
         const firstLine = keyLines[0];
         const lastLine = keyLines[keyLines.length - 1];
@@ -66,35 +62,31 @@ try {
                 || !firstLine.endsWith('-----')
                 || !lastLine.startsWith('-----END')
                 || !lastLine.endsWith('-----')) {
-            core.setFailed(`${keyFile}: `
+            throw new Error(`${keyFile}: `
                 + 'private key must start with the line "-----BEGIN...-----" '
                 + 'and end with the line "-----END...-----"');
-            return;
         }
 
-        childProcess.execSync(
+        execSync(
             `ssh-keygen -y -f ${keyFile} > ${publicKeyFile}`);
         console.log(`${publicKeyFile}: created`);
         const data = fs.readFileSync(publicKeyFile, { encoding: 'utf8' });
         const all = data.trim().split(' ');
         if (all.length !== 3) {
-            core.setFailed(`${keyFile}: illegal comment: ${data}`);
-            return;
+            throw new Error(`${keyFile}: illegal comment: ${data}`);
         }
         const comment = all[2];
         console.log(`${keyFile}: key comment is "${comment}"`);
         if (!comment.startsWith(COMMENT_PREFIX)) {
-            core.setFailed(`${keyFile}: ${ILLEGAL_KEY_COMMENT_PREFIX}`);
-            return;
+            throw new Error(`${keyFile}: ${ILLEGAL_KEY_COMMENT_PREFIX}`);
         }
         if (!comment.endsWith(COMMENT_POSTFIX)) {
-            core.setFailed(`${keyFile}: ${ILLEGAL_KEY_COMMENT_POSTFIX}`);
-            return;
+            throw new Error(`${keyFile}: ${ILLEGAL_KEY_COMMENT_POSTFIX}`);
         }
         const url = comment.slice(0, -COMMENT_POSTFIX.length);
         const pathOfUrl = url.slice(COMMENT_PREFIX.length);
         const newUrl = `git@${fakeHost}:${pathOfUrl}`;
-        childProcess.execSync(
+        execSync(
             `git config --global url.${newUrl}.insteadOf ${url}`);
         sshConfigList.push(`Host ${fakeHost}`,
             '  HostName github.com',

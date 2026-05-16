@@ -5,5 +5,5 @@ inputs:
     description: 'Deploy keys of other private repositories'
     required: true
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
