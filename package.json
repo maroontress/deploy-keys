@@ -1,9 +1,10 @@
 {
   "name": "deploy-keys",
   "repository": "git@github.com:maroontress/deploy-keys.git",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Configure the Git and SSH with the specified GitHub Deploy Keys to access other private repositories",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,7 +19,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@stylistic/eslint-plugin-js": "^4.4.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "25.x",
     "eslint": "^10.4.0",
     "globals": "^17.6.0"

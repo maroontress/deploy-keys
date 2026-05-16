@@ -1,9 +1,9 @@
 import globals from 'globals';
 import js from '@eslint/js';
-import stylisticJs from '@stylistic/eslint-plugin-js';
+import stylistic from '@stylistic/eslint-plugin';
 
 const commonRules = {
-  '@stylistic/js/max-len': ['error', { 'code': 80 }],
+  '@stylistic/max-len': ['error', { 'code': 80 }],
   'prefer-const': 'warn',
   'line-comment-position': ['warn', { 'position': 'above' }],
   'camelcase': 'warn',
@@ -21,10 +21,10 @@ export default [
   {
     files: ['*.js'],
     plugins: {
-      '@stylistic/js': stylisticJs
+      '@stylistic': stylistic
     },
     languageOptions: {
-      sourceType: 'commonjs',
+      sourceType: 'module',
       globals: {
         ...globals.node,
         ...globals.es2021,
