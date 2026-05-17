@@ -103,8 +103,8 @@ See [_Commit, tag, and push your action to GitHub_ &mdash; Creating a JavaScript
 action][gh:vercel_ncc].
 
 ```plaintext
-sudo npm i -g @vercel/ncc
-ncc build index.js --license licenses.txt
+npm install --save-dev rollup @rollup/plugin-commonjs @rollup/plugin-node-resolve
+npx rollup --config rollup.config.js
 ```
 
 ## Lint
